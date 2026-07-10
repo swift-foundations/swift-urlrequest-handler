@@ -12,7 +12,7 @@ import Foundation
     import FoundationNetworking
 #endif
 
-public enum DefaultSessionKey: Sendable, DependencyKey {
+public enum DefaultSessionKey: Sendable, Dependency.Key {
     public static let testValue: @Sendable (URLRequest) async throws -> (Data, URLResponse) = Self
         .liveValue
     public static let liveValue: @Sendable (URLRequest) async throws -> (Data, URLResponse) = {
@@ -20,7 +20,7 @@ public enum DefaultSessionKey: Sendable, DependencyKey {
     }
 }
 
-extension DependencyValues {
+extension Dependency.Values {
     public var defaultSession: @Sendable (URLRequest) async throws -> (Data, URLResponse) {
         get { self[DefaultSessionKey.self] }
         set { self[DefaultSessionKey.self] = newValue }

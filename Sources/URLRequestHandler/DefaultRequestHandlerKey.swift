@@ -304,14 +304,14 @@ extension URLRequest {
     }
 }
 
-extension DependencyValues {
+extension Dependency.Values {
     public var defaultRequestHandler: URLRequest.Handler {
         get { self[URLRequest.Handler.self] }
         set { self[URLRequest.Handler.self] = newValue }
     }
 }
 
-extension URLRequest.Handler: TestDependencyKey {
+extension URLRequest.Handler: Dependency.Key.Test {
     public static var testValue: Self { .init(debug: true) }
 }
 

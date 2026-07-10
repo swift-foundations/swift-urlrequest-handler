@@ -1,4 +1,4 @@
-// swift-tools-version:6.0
+// swift-tools-version: 6.3.1
 
 import Foundation
 import PackageDescription
@@ -13,8 +13,7 @@ extension Target.Dependency {
 
 extension Target.Dependency {
     static var dependencies: Self { .product(name: "Dependencies", package: "swift-dependencies") }
-    static var dependenciesMacros: Self { .product(name: "DependenciesMacros", package: "swift-dependencies") }
-    static var dependenciesTestSupport: Self { .product(name: "DependenciesTestSupport", package: "swift-dependencies") }
+    static var dependenciesTestSupport: Self { .product(name: "Dependencies Test Support", package: "swift-dependencies") }
     static var issueReporting: Self { .product(name: "IssueReporting", package: "xctest-dynamic-overlay") }
     static var loggingExtras: Self { .product(name: "LoggingExtras", package: "swift-logging-extras") }
 }
@@ -22,18 +21,18 @@ extension Target.Dependency {
 let package = Package(
     name: "swift-urlrequest-handler",
     platforms: [
-      .iOS(.v13),
-      .macOS(.v10_15),
-      .tvOS(.v13),
-      .watchOS(.v6)
+      .iOS(.v26),
+      .macOS(.v26),
+      .tvOS(.v26),
+      .watchOS(.v26)
     ],
     products: [
         .library(name: .urlRequestHandler, targets: [.urlRequestHandler])
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.10.0"),
+        .package(url: "https://github.com/swift-foundations/swift-dependencies.git", branch: "main"),
         .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", from: "1.4.3"),
-        .package(url: "https://github.com/coenttb/swift-logging-extras", from: "0.0.1")
+        .package(url: "https://github.com/swift-foundations/swift-logging-extras.git", branch: "main")
     ],
     targets: [
         .target(
