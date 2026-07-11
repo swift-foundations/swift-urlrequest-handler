@@ -1,6 +1,5 @@
 import Dependencies
 import Foundation
-import IssueReporting
 import LoggingExtras
 
 #if canImport(FoundationNetworking)
@@ -16,7 +15,7 @@ extension URLRequest {
     /// - Structured error reporting with context
     /// - Comprehensive logging with privacy considerations
     /// - Configurable JSON decoder
-    /// - Integration with Swift Dependencies and IssueReporting
+    /// - Integration with Swift Dependencies and LoggingExtras
     public struct Handler: Sendable {
         public var debug = false
         public var decoder: JSONDecoder
@@ -63,13 +62,7 @@ extension URLRequest {
             column: UInt = #column
         ) async throws -> ResponseType {
             guard request.url != nil else {
-                reportIssue(
-                    "URLRequest has no URL",
-                    fileID: fileID,
-                    filePath: filePath,
-                    line: line,
-                    column: column
-                )
+                logger.error("URLRequest has no URL (\(fileID):\(line))")
                 throw RequestError.invalidResponse
             }
 
@@ -163,13 +156,7 @@ extension URLRequest {
 
                     // Only report final decode failures if not in test environment
                     if !debug {
-                        reportIssue(
-                            "Failed to decode response as \(type)",
-                            fileID: fileID,
-                            filePath: filePath,
-                            line: line,
-                            column: column
-                        )
+                        logger.error("Failed to decode response as \(type) (\(fileID):\(line))")
                     }
                     throw RequestError.decodingError(context)
                 }
@@ -183,7 +170,7 @@ extension URLRequest {
             for request: URLRequest
         ) async throws {
             guard request.url != nil else {
-                reportIssue("URLRequest has no URL")
+                logger.error("URLRequest has no URL")
                 throw RequestError.invalidResponse
             }
 
@@ -205,7 +192,7 @@ extension URLRequest {
                 }
                 // Don't report issues in test environment (debug=true means test environment)
                 if !debug {
-                    reportIssue("Received non-HTTP response: \(String(describing: response))")
+                    logger.error("Received non-HTTP response: \(String(describing: response))")
                 }
                 throw RequestError.invalidResponse
             }
@@ -234,7 +221,7 @@ extension URLRequest {
                     line: line,
                     rawData: rawDataString
                 )
-                // Don't reportIssue here as this is often an expected failure (e.g., envelope vs direct decode attempts)
+                // Don't log an error here as this is often an expected failure (e.g., envelope vs direct decode attempts)
                 throw RequestError.decodingError(context)
             }
         }
@@ -258,7 +245,7 @@ extension URLRequest {
 
                 // Only report server errors (5xx) if not in test environment
                 if response.statusCode >= 500 && !debug {
-                    reportIssue("Server error \(response.statusCode): \(errorMessage)")
+                    logger.error("Server error \(response.statusCode): \(errorMessage)")
                 }
 
                 throw error

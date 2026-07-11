@@ -14,7 +14,6 @@ extension Target.Dependency {
 extension Target.Dependency {
     static var dependencies: Self { .product(name: "Dependencies", package: "swift-dependencies") }
     static var dependenciesTestSupport: Self { .product(name: "Dependencies Test Support", package: "swift-dependencies") }
-    static var issueReporting: Self { .product(name: "IssueReporting", package: "xctest-dynamic-overlay") }
     static var loggingExtras: Self { .product(name: "LoggingExtras", package: "swift-logging-extras") }
 }
 
@@ -31,7 +30,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/swift-foundations/swift-dependencies.git", branch: "main"),
-        .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay.git", from: "1.4.3"),
         .package(url: "https://github.com/swift-foundations/swift-logging-extras.git", branch: "main")
     ],
     targets: [
@@ -39,7 +37,6 @@ let package = Package(
             name: .urlRequestHandler,
             dependencies: [
                 .dependencies,
-                .issueReporting,
                 .loggingExtras
             ]
         ),
