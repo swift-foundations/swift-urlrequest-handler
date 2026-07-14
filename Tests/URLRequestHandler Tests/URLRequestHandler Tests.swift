@@ -14,9 +14,11 @@ struct URLRequestHandlerTests {
 
     @Test
     func testSuccessfulDirectResponse() async throws {
-        let mockData = """
+        let mockData = Data(
+            """
             {"id": "123", "name": "Test User", "email": "test@example.com"}
-            """.data(using: .utf8)!
+            """.utf8
+        )
 
         try await withDependencies {
             $0.defaultSession = { request in
@@ -45,14 +47,16 @@ struct URLRequestHandlerTests {
 
     @Test
     func testSuccessfulEnvelopeResponse() async throws {
-        let mockData = """
+        let mockData = Data(
+            """
             {
                 "success": true,
                 "data": {"id": "456", "name": "Envelope User", "email": "envelope@example.com"},
                 "message": "User fetched successfully",
                 "timestamp": "2024-01-01T00:00:00Z"
             }
-            """.data(using: .utf8)!
+            """.utf8
+        )
 
         try await withDependencies {
             $0.defaultSession = { request in
@@ -105,9 +109,11 @@ struct URLRequestHandlerTests {
 
     @Test
     func testHTTPError() async throws {
-        let errorData = """
+        let errorData = Data(
+            """
             {"message": "User not found"}
-            """.data(using: .utf8)!
+            """.utf8
+        )
 
         try await withDependencies {
             $0.defaultSession = { request in
@@ -143,9 +149,11 @@ struct URLRequestHandlerTests {
 
     @Test
     func testDecodingError() async throws {
-        let invalidData = """
+        let invalidData = Data(
+            """
             {"invalid": "json structure"}
-            """.data(using: .utf8)!
+            """.utf8
+        )
 
         try await withDependencies {
             $0.defaultSession = { request in
@@ -181,14 +189,16 @@ struct URLRequestHandlerTests {
 
     @Test
     func testEnvelopeWithNoData() async throws {
-        let mockData = """
+        let mockData = Data(
+            """
             {
                 "success": true,
                 "data": null,
                 "message": "No data available",
                 "timestamp": "2024-01-01T00:00:00Z"
             }
-            """.data(using: .utf8)!
+            """.utf8
+        )
 
         try await withDependencies {
             $0.defaultSession = { request in
@@ -249,14 +259,16 @@ struct URLRequestHandlerTests {
 
     @Test
     func testEnvelopeDecoding() throws {
-        let json = """
+        let json = Data(
+            """
             {
                 "success": true,
                 "data": {"value": "test"},
                 "message": "Success",
                 "timestamp": "2024-01-01T00:00:00Z"
             }
-            """.data(using: .utf8)!
+            """.utf8
+        )
 
         struct TestData: Decodable {
             let value: String
@@ -301,9 +313,11 @@ struct URLRequestHandlerTests {
 
     @Test
     func testCustomDecoder() async throws {
-        let mockData = """
+        let mockData = Data(
+            """
             {"user_id": "789", "user_name": "Snake Case User", "email_address": "snake@example.com"}
-            """.data(using: .utf8)!
+            """.utf8
+        )
 
         try await withDependencies {
             $0.defaultSession = { request in

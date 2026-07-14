@@ -23,9 +23,11 @@ struct ReadmeVerificationTests {
 
         try await withDependencies {
             $0.defaultSession = { request in
-                let data = """
+                let data = Data(
+                    """
                     {"id": "123", "name": "John Doe", "email": "john@example.com"}
-                    """.data(using: .utf8)!
+                    """.utf8
+                )
                 let response = HTTPURLResponse(
                     url: request.url!,
                     statusCode: 200,
@@ -61,14 +63,16 @@ struct ReadmeVerificationTests {
 
         try await withDependencies {
             $0.defaultSession = { request in
-                let data = """
+                let data = Data(
+                    """
                     {
                       "success": true,
                       "data": { "id": "123", "name": "John" },
                       "message": "User fetched successfully",
                       "timestamp": "2024-01-01T00:00:00Z"
                     }
-                    """.data(using: .utf8)!
+                    """.utf8
+                )
                 let response = HTTPURLResponse(
                     url: request.url!,
                     statusCode: 200,
@@ -102,9 +106,11 @@ struct ReadmeVerificationTests {
 
         try await withDependencies {
             $0.defaultSession = { request in
-                let data = """
+                let data = Data(
+                    """
                     {"id": "123"}
-                    """.data(using: .utf8)!
+                    """.utf8
+                )
                 let response = HTTPURLResponse(
                     url: request.url!,
                     statusCode: 200,
@@ -165,9 +171,11 @@ struct ReadmeVerificationTests {
         // Test HTTP Error
         try await withDependencies {
             $0.defaultSession = { request in
-                let data = """
+                let data = Data(
+                    """
                     {"message": "Not found"}
-                    """.data(using: .utf8)!
+                    """.utf8
+                )
                 let response = HTTPURLResponse(
                     url: request.url!,
                     statusCode: 404,
@@ -205,9 +213,11 @@ struct ReadmeVerificationTests {
 
         try await withDependencies {
             $0.defaultSession = { request in
-                let data = """
+                let data = Data(
+                    """
                     {"id": "123", "name": "Test User"}
-                    """.data(using: .utf8)!
+                    """.utf8
+                )
                 let response = HTTPURLResponse(
                     url: request.url!,
                     statusCode: 200,
@@ -241,9 +251,11 @@ struct ReadmeVerificationTests {
         try await withDependencies {
             $0.defaultSession = { request in
                 // Custom session configuration would be applied here
-                let data = """
+                let data = Data(
+                    """
                     {"id": "123"}
-                    """.data(using: .utf8)!
+                    """.utf8
+                )
                 let response = HTTPURLResponse(
                     url: request.url!,
                     statusCode: 200,

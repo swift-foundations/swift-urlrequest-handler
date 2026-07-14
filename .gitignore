@@ -48,3 +48,6 @@ CLAUDE.MD
 # Temporary files
 *.tmp
 *.temp
+
+# SwiftLint Remote Config Cache
+.swiftlint/RemoteConfigCache
