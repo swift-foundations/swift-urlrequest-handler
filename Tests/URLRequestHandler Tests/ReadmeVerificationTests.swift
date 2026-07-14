@@ -8,7 +8,7 @@ import Testing
     import FoundationNetworking
 #endif
 
-@Suite("README Verification Tests")
+@Suite("README Verification Tests", .dependencies)
 struct ReadmeVerificationTests {
 
     // MARK: - Basic Request Handling (Lines 49-71)

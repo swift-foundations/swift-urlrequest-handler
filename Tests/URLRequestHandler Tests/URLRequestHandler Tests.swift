@@ -8,7 +8,7 @@ import Testing
     import FoundationNetworking
 #endif
 
-@Suite
+@Suite(.dependencies)
 struct URLRequestHandlerTests {
     // MARK: - Basic Functionality Tests
 
