@@ -13,7 +13,7 @@ struct URLRequestHandlerTests {
     // MARK: - Basic Functionality Tests
 
     @Test
-    func testSuccessfulDirectResponse() async throws {
+    func `Successful Direct Response`() async throws {
         let mockData = Data(
             """
             {"id": "123", "name": "Test User", "email": "test@example.com"}
@@ -46,7 +46,7 @@ struct URLRequestHandlerTests {
     }
 
     @Test
-    func testSuccessfulEnvelopeResponse() async throws {
+    func `Successful Envelope Response`() async throws {
         let mockData = Data(
             """
             {
@@ -84,7 +84,7 @@ struct URLRequestHandlerTests {
     }
 
     @Test
-    func testVoidRequest() async throws {
+    func `Void Request`() async throws {
         try await withDependencies {
             $0.defaultSession = { request in
                 let response = HTTPURLResponse(
@@ -108,7 +108,7 @@ struct URLRequestHandlerTests {
     // MARK: - Error Handling Tests
 
     @Test
-    func testHTTPError() async throws {
+    func `HTTPError`() async throws {
         let errorData = Data(
             """
             {"message": "User not found"}
@@ -148,7 +148,7 @@ struct URLRequestHandlerTests {
     }
 
     @Test
-    func testDecodingError() async throws {
+    func `Decoding Error`() async throws {
         let invalidData = Data(
             """
             {"invalid": "json structure"}
@@ -188,7 +188,7 @@ struct URLRequestHandlerTests {
     }
 
     @Test
-    func testEnvelopeWithNoData() async throws {
+    func `Envelope With No Data`() async throws {
         let mockData = Data(
             """
             {
@@ -230,7 +230,7 @@ struct URLRequestHandlerTests {
     // MARK: - URLSession Dependency Tests
 
     @Test
-    func testDefaultSessionKey() async throws {
+    func `Default Session Key`() async throws {
         let mockData = Data("test".utf8)
         let mockResponse = HTTPURLResponse(
             url: URL(string: "https://example.com")!,
@@ -258,7 +258,7 @@ struct URLRequestHandlerTests {
     // MARK: - Envelope Type Tests
 
     @Test
-    func testEnvelopeDecoding() throws {
+    func `Envelope Decoding`() throws {
         let json = Data(
             """
             {
@@ -286,7 +286,7 @@ struct URLRequestHandlerTests {
     }
 
     @Test
-    func testEnvelopeEncoding() throws {
+    func `Envelope Encoding`() throws {
         struct TestData: Codable {
             let value: String
         }
@@ -312,7 +312,7 @@ struct URLRequestHandlerTests {
     // MARK: - Custom Decoder Tests
 
     @Test
-    func testCustomDecoder() async throws {
+    func `Custom Decoder`() async throws {
         let mockData = Data(
             """
             {"user_id": "789", "user_name": "Snake Case User", "email_address": "snake@example.com"}

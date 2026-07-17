@@ -8,13 +8,13 @@ import Testing
     import FoundationNetworking
 #endif
 
-@Suite("README Verification Tests", .dependencies)
-struct ReadmeVerificationTests {
+@Suite( .dependencies
+struct Test {
 
     // MARK: - Basic Request Handling (Lines 49-71)
 
-    @Test("README Line 49-71: Basic Request Handling")
-    func testBasicRequestHandling() async throws {
+    @Test
+    func `README Line 49-71: Basic Request Handling`() async throws {
         struct User: Decodable {
             let id: String
             let name: String
@@ -54,8 +54,8 @@ struct ReadmeVerificationTests {
 
     // MARK: - Envelope Response Pattern (Lines 73-93)
 
-    @Test("README Line 73-93: Envelope Response Pattern")
-    func testEnvelopeResponsePattern() async throws {
+    @Test
+    func `README Line 73-93: Envelope Response Pattern`() async throws {
         struct User: Decodable {
             let id: String
             let name: String
@@ -98,8 +98,8 @@ struct ReadmeVerificationTests {
 
     // MARK: - Custom JSON Decoder (Lines 95-106)
 
-    @Test("README Line 95-106: Custom JSON Decoder")
-    func testCustomJSONDecoder() async throws {
+    @Test
+    func `README Line 95-106: Custom JSON Decoder`() async throws {
         struct Response: Decodable {
             let id: String
         }
@@ -137,8 +137,8 @@ struct ReadmeVerificationTests {
 
     // MARK: - Void Requests (Lines 108-117)
 
-    @Test("README Line 108-117: Void Requests")
-    func testVoidRequests() async throws {
+    @Test
+    func `README Line 108-117: Void Requests`() async throws {
         try await withDependencies {
             $0.defaultSession = { request in
                 let response = HTTPURLResponse(
@@ -162,8 +162,8 @@ struct ReadmeVerificationTests {
 
     // MARK: - Error Handling (Lines 119-136)
 
-    @Test("README Line 119-136: Error Handling")
-    func testErrorHandling() async throws {
+    @Test
+    func `README Line 119-136: Error Handling`() async throws {
         struct User: Decodable {
             let id: String
         }
@@ -204,8 +204,8 @@ struct ReadmeVerificationTests {
 
     // MARK: - Testing with Mocks (Lines 140-176)
 
-    @Test("README Line 140-176: Testing with Mocks")
-    func testTestingWithMocks() async throws {
+    @Test
+    func `README Line 140-176: Testing with Mocks`() async throws {
         struct User: Decodable {
             let id: String
             let name: String
@@ -242,8 +242,8 @@ struct ReadmeVerificationTests {
 
     // MARK: - Custom URLSession (Lines 178-193)
 
-    @Test("README Line 178-193: Custom URLSession")
-    func testCustomURLSession() async throws {
+    @Test
+    func `README Line 178-193: Custom URLSession`() async throws {
         struct Response: Decodable {
             let id: String
         }
@@ -279,8 +279,8 @@ struct ReadmeVerificationTests {
 
     // MARK: - URLRequest.Handler API (Lines 198-208)
 
-    @Test("README Line 198-208: URLRequest.Handler API")
-    func testHandlerAPI() {
+    @Test
+    func `README Line 198-208: URLRequest.Handler API`() {
         let handler = URLRequest.Handler(debug: false, decoder: JSONDecoder())
 
         #expect(handler.debug == false)
@@ -294,8 +294,8 @@ struct ReadmeVerificationTests {
 
     // MARK: - RequestError Types (Lines 210-222)
 
-    @Test("README Line 210-222: RequestError Types")
-    func testRequestErrorTypes() {
+    @Test
+    func `README Line 210-222: Request Error Types`() {
         let invalidResponseError = RequestError.invalidResponse
         let httpError = RequestError.httpError(statusCode: 404, message: "Not found")
         let envelopeDataMissingError = RequestError.envelopeDataMissing
@@ -312,8 +312,8 @@ struct ReadmeVerificationTests {
 
     // MARK: - Envelope Structure (Lines 224-239)
 
-    @Test("README Line 224-239: Envelope Structure")
-    func testEnvelopeStructure() throws {
+    @Test
+    func `README Line 224-239: Envelope Structure`() throws {
         struct TestData: Codable, Equatable {
             let value: String
         }
