@@ -8,7 +8,7 @@ import Testing
     import FoundationNetworking
 #endif
 
-@Suite( .dependencies
+@Suite(.dependencies)
 struct Test {
 
     // MARK: - Basic Request Handling (Lines 49-71)

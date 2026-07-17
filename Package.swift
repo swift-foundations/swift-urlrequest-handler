@@ -14,7 +14,8 @@ extension Target.Dependency {
 extension Target.Dependency {
     static var dependencies: Self { .product(name: "Dependencies", package: "swift-dependencies") }
     static var dependenciesTestSupport: Self { .product(name: "Dependencies Test Support", package: "swift-dependencies") }
-    static var loggingExtras: Self { .product(name: "LoggingExtras", package: "swift-logging-extras") }
+    static var loggerDependencies: Self { .product(name: "Logger Dependencies", package: "swift-logger-dependencies") }
+    static var logging: Self { .product(name: "Logging", package: "swift-log") }
 }
 
 let package = Package(
@@ -30,14 +31,16 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/swift-foundations/swift-dependencies.git", branch: "main"),
-        .package(url: "https://github.com/swift-foundations/swift-logging-extras.git", branch: "main")
+        .package(url: "https://github.com/swift-foundations/swift-logger-dependencies.git", branch: "main"),
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0")
     ],
     targets: [
         .target(
             name: .urlRequestHandler,
             dependencies: [
                 .dependencies,
-                .loggingExtras
+                .loggerDependencies,
+                .logging
             ]
         ),
         .testTarget(

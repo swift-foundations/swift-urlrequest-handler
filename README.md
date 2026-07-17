@@ -274,14 +274,15 @@ swift test
 ## Dependencies
 
 - [swift-dependencies](https://github.com/pointfreeco/swift-dependencies) (1.9.2+)
+- [swift-log](https://github.com/apple/swift-log) (1.0.0+)
+- [swift-logger-dependencies](https://github.com/swift-foundations/swift-logger-dependencies)
 - [xctest-dynamic-overlay](https://github.com/pointfreeco/xctest-dynamic-overlay) (1.4.3+)
-- [swift-logging-extras](https://github.com/coenttb/swift-logging-extras) (0.0.1+)
 
 ## Related Packages
 
 ### Dependencies
 
-- [swift-logging-extras](https://github.com/coenttb/swift-logging-extras): A Swift package for integrating swift-logging with swift-dependencies.
+- [swift-logger-dependencies](https://github.com/swift-foundations/swift-logger-dependencies): The focused Swift Logging × Dependencies integration.
 
 ### Used By
 

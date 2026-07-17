@@ -1,6 +1,7 @@
 import Dependencies
 import Foundation
-import LoggingExtras
+import Logger_Dependencies
+import Logging
 
 #if canImport(FoundationNetworking)
     import FoundationNetworking
@@ -15,7 +16,7 @@ extension URLRequest {
     /// - Structured error reporting with context
     /// - Comprehensive logging with privacy considerations
     /// - Configurable JSON decoder
-    /// - Integration with Swift Dependencies and LoggingExtras
+    /// - Integration with Swift Dependencies and Swift Logging
     public struct Handler: Sendable {
         public var debug = false
         public var decoder: JSONDecoder
