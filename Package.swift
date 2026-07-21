@@ -1,6 +1,5 @@
 // swift-tools-version: 6.3.3
 
-import Foundation
 import PackageDescription
 
 extension String {
