@@ -52,7 +52,7 @@ Add the following to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/coenttb/swift-urlrequest-handler", from: "0.0.1")
+    .package(url: "https://github.com/coenttb/swift-urlrequest-handler", from: "0.0.4")
 ]
 ```
 
