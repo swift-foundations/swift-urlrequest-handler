@@ -308,7 +308,7 @@ struct ErrorResponse: Decodable {
     let message: String
 }
 
-public enum RequestError: Error, Equatable {
+public enum RequestError: Swift.Error, Equatable {
     /// The server returned a non-HTTP response
     case invalidResponse
     /// The server returned an HTTP error status code
