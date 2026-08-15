@@ -61,7 +61,7 @@ extension URLRequest {
             filePath: StaticString = #filePath,
             line: UInt = #line,
             column: UInt = #column
-        ) async throws -> ResponseType {
+        ) async throws(RequestError) -> ResponseType {
             guard request.url != nil else {
                 logger.error("URLRequest has no URL (\(fileID):\(line))")
                 throw RequestError.invalidResponse
@@ -131,35 +131,18 @@ extension URLRequest {
                         logger.debug("Direct decode successful")
                     }
                     return response
-                } catch let decodeError {
-                    // If the error is already a RequestError, re-throw it directly
-                    if let requestError = decodeError as? RequestError {
-                        if debug {
-                            logger.error("Direct decode failed with RequestError: \(requestError)")
-                        }
-                        throw requestError
-                    }
-
-                    // Only wrap non-RequestError errors
-                    let rawDataString =
-                        String(data: data, encoding: .utf8)
-                        ?? "Unable to convert data to UTF-8 string"
-                    let context = DecodingContext(
-                        originalError: decodeError.localizedDescription,
-                        attemptedType: String(reflecting: type),
-                        fileID: String(describing: fileID),
-                        line: line,
-                        rawData: rawDataString
-                    )
+                } catch {
+                    // `decodeResponse` is `throws(RequestError)`, so `error` is always
+                    // already a fully-formed `RequestError` — re-throw it directly.
                     if debug {
-                        logger.error("Direct decode failed: \(context.description)")
+                        logger.error("Direct decode failed with RequestError: \(error)")
                     }
 
                     // Only report final decode failures if not in test environment
                     if !debug {
                         logger.error("Failed to decode response as \(type) (\(fileID):\(line))")
                     }
-                    throw RequestError.decodingError(context)
+                    throw error
                 }
             }
         }
@@ -169,7 +152,7 @@ extension URLRequest {
         /// - Throws: RequestError for various failure scenarios
         public func callAsFunction(
             for request: URLRequest
-        ) async throws {
+        ) async throws(RequestError) {
             guard request.url != nil else {
                 logger.error("URLRequest has no URL")
                 throw RequestError.invalidResponse
@@ -178,10 +161,21 @@ extension URLRequest {
             let (_, _) = try await performRequest(request)
         }
 
-        private func performRequest(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+        private func performRequest(
+            _ request: URLRequest
+        ) async throws(RequestError) -> (Data, HTTPURLResponse) {
             if debug { logRequest(request) }
 
-            let (data, response) = try await session(request)
+            let data: Data
+            let response: URLResponse
+            do {
+                (data, response) = try await session(request)
+            } catch {
+                if debug {
+                    logger.error("Session request failed: \(error.localizedDescription)")
+                }
+                throw RequestError.sessionError(error.localizedDescription)
+            }
 
             if debug { logResponse(response, data: data) }
 
@@ -209,7 +203,7 @@ extension URLRequest {
             filePath: StaticString = #filePath,
             line: UInt = #line,
             column: UInt = #column
-        ) throws -> T {
+        ) throws(RequestError) -> T {
             do {
                 return try self.decoder.decode(type, from: data)
             } catch {
@@ -227,11 +221,20 @@ extension URLRequest {
             }
         }
 
-        private func validateResponse(_ response: HTTPURLResponse, data: Data) throws {
+        private func validateResponse(
+            _ response: HTTPURLResponse,
+            data: Data
+        ) throws(RequestError) {
             guard (200...299).contains(response.statusCode) else {
-                let errorMessage =
-                    (try? JSONDecoder().decode(ErrorResponse.self, from: data).message)
-                    ?? String(decoding: data, as: UTF8.self)
+                // JSONDecoder().decode is a cross-module Foundation API with untyped
+                // throws; this is a best-effort attempt at a nicer error message that
+                // falls back to the raw body on ANY decode failure.
+                let errorMessage: String
+                do {
+                    errorMessage = try JSONDecoder().decode(ErrorResponse.self, from: data).message
+                } catch {
+                    errorMessage = String(decoding: data, as: UTF8.self)
+                }
 
                 let error = RequestError.httpError(
                     statusCode: response.statusCode,
@@ -317,17 +320,28 @@ public enum RequestError: Swift.Error, Equatable {
     case decodingError(DecodingContext)
     /// The envelope response was successful but contained no data
     case envelopeDataMissing
+    /// The underlying session/transport call failed (e.g. a network error). The
+    /// session dependency is intentionally untyped-throws (it is a test-mockable
+    /// seam that must accept arbitrary error types), so its failure is captured
+    /// here by description rather than by boxing the original error.
+    case sessionError(String)
 
     public var localizedDescription: String {
         switch self {
         case .invalidResponse:
             return "Invalid response from server"
+
         case .httpError(let statusCode, let message):
             return "HTTP error \(statusCode): \(message)"
+
         case .decodingError(let context):
             return "Failed to decode response: \(context.description)"
+
         case .envelopeDataMissing:
             return "Envelope response contained no data"
+
+        case .sessionError(let message):
+            return "Session request failed: \(message)"
         }
     }
 }
@@ -361,7 +375,7 @@ public struct DecodingContext: Equatable, Sendable {
 
     public var description: String {
         var desc = "\(originalError) (attempted type: \(attemptedType) at \(fileID):\(line))"
-        if let rawData = rawData {
+        if let rawData {
             desc += "\nRaw data received: \(rawData)"
         }
         return desc
